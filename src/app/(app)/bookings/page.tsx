@@ -32,6 +32,9 @@ export default async function BookingsPage({
             ? "Only the appointments assigned to you are listed — that is enforced by the database, not the screen."
             : "Every appointment from draft through to payment."
         }
+        actions={user.role !== "therapist"
+          ? <Link className="btn pri" href="/bookings/quick">+ Quick add booking</Link>
+          : undefined}
       />
 
       <form className="row" style={{ marginBottom: 12 }}>

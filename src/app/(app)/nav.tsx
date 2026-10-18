@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
 import { usePathname } from "next/navigation";
 import type { AppRole } from "@/lib/types";
 
@@ -9,6 +10,7 @@ const NAV: { group: string; items: [string, string, AppRole[]][] }[] = [
     items: [
       ["/", "Dashboard", ["owner", "officer", "therapist"]],
       ["/enquiries", "Enquiries", ["owner", "officer"]],
+      ["/bookings/quick", "+ Quick add booking", ["owner", "officer"]],
       ["/bookings", "Bookings", ["owner", "officer", "therapist"]],
       ["/tasks", "Tasks", ["owner", "officer", "therapist"]],
     ],
@@ -24,7 +26,11 @@ const NAV: { group: string; items: [string, string, AppRole[]][] }[] = [
   },
   {
     group: "Business",
-    items: [["/finance", "Finance", ["owner", "officer"]]],
+    items: [
+      ["/finance", "Finance", ["owner", "officer"]],
+      ["/marketing", "Marketing", ["owner", "officer"]],
+      ["/marketing/google-ads", "Google Ads", ["owner", "officer"]],
+    ],
   },
   {
     group: "System",
@@ -33,11 +39,14 @@ const NAV: { group: string; items: [string, string, AppRole[]][] }[] = [
 ];
 
 const MOBILE: [string, string][] = [
-  ["/", "Home"], ["/enquiries", "Enquiries"], ["/bookings", "Bookings"], ["/tasks", "Tasks"],
+  ["/", "Home"], ["/bookings/quick", "+ Add"], ["/enquiries", "Enquiries"], ["/bookings", "Bookings"], ["/tasks", "Tasks"],
 ];
 
 function isActive(pathname: string, href: string) {
-  return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  if (href === "/") return pathname === "/";
+  // "/bookings" must not light up while on "/bookings/quick"
+  if (href === "/bookings" && pathname.startsWith("/bookings/quick")) return false;
+  return pathname.startsWith(href);
 }
 
 export function Rail({ role, name }: { role: AppRole; name: string }) {
@@ -45,7 +54,7 @@ export function Rail({ role, name }: { role: AppRole; name: string }) {
   return (
     <nav className="rail" aria-label="Main">
       <div className="brand">
-        <span className="mark">SW</span>
+        <Link href="/" aria-label="SpaWell Ghana dashboard"><BrandLogo /></Link>
         <div>
           <h1>SpaWell CRM</h1>
           <small>Accra operations</small>
